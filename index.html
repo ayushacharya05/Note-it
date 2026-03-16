@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Note It | Clean UI</title>
+    <title>Note It | Final Pro</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -18,6 +18,7 @@
             --note-font-size: 16px;
             --bg-color: #ffffff;
             --surface: #ffffff;
+            --danger: #d93025;
         }
 
         body.dark-mode {
@@ -27,40 +28,39 @@
             --text-gray: #9aa0a6;
         }
 
-        body { background-color: var(--bg-color); font-family: 'Roboto', sans-serif; color: var(--text-dark); transition: 0.2s; overflow-x: hidden; }
+        body { background-color: var(--bg-color); font-family: 'Roboto', sans-serif; color: var(--text-dark); transition: 0.2s; overflow-x: hidden; margin: 0; }
 
-        /* AppBar */
-        .app-bar { padding: 12px 20px; display: flex; align-items: center; background: var(--surface); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.1); }
-        .app-bar h1 { font-size: 20px; margin: 0 0 0 25px; flex-grow: 1; font-weight: 400; }
-        .app-bar i { color: var(--text-gray); font-size: 20px; cursor: pointer; }
+        /* AppBar Refined */
+        .app-bar { padding: 12px 20px; display: flex; align-items: center; background: var(--surface); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.1); height: 64px; }
+        .app-bar h1 { font-size: 20px; margin: 0 0 0 25px; flex-grow: 1; font-weight: 400; white-space: nowrap; }
+        .app-bar i { color: var(--text-gray); font-size: 20px; cursor: pointer; padding: 8px; }
+        
+        #searchInput { flex-grow: 1; margin: 0 15px; border: none; outline: none; background: transparent; color: var(--text-dark); font-size: 18px; }
 
-        /* Drawer - Increased Z-Index */
+        /* Side Menu */
         .drawer { position: fixed; top: 0; left: calc(-1 * var(--drawer-width)); width: var(--drawer-width); height: 100%; background: var(--surface); z-index: 3000; transition: transform 0.25s ease; padding-top: 60px; box-shadow: 10px 0 20px rgba(0,0,0,0.1); }
         .drawer.open { transform: translateX(var(--drawer-width)); }
-        
-        .drawer-item { padding: 12px 24px; display: flex; align-items: center; color: var(--text-dark); text-decoration: none; font-weight: 500; border-radius: 0 25px 25px 0; margin-right: 10px; cursor: pointer; }
+        .drawer-item { padding: 12px 24px; display: flex; align-items: center; color: var(--text-dark); text-decoration: none; font-weight: 500; border-radius: 0 25px 25px 0; margin-right: 10px; cursor: pointer; transition: 0.2s; }
         .drawer-item i { margin-right: 32px; font-size: 20px; width: 20px; text-align: center; color: var(--text-gray); }
         .drawer-item.active { background-color: #feefc3; color: #202124; }
         .drawer-item.active i { color: #f4b400; }
-
         .menu-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2900; display: none; }
         .menu-backdrop.show { display: block; }
 
-        /* Notes */
-        .note-item { padding: 16px 20px; border-bottom: 1px solid rgba(0,0,0,0.05); display: flex; justify-content: space-between; background: var(--surface); cursor: pointer; }
+        /* Swipeable Notes */
+        .note-wrapper { position: relative; background-color: var(--danger); overflow: hidden; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .delete-reveal { position: absolute; left: 0; top: 0; bottom: 0; width: 80px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; z-index: 1; }
+        .note-item { padding: 16px 20px; background: var(--surface); position: relative; z-index: 2; cursor: pointer; touch-action: pan-y; }
         .note-title { font-weight: 500; font-size: var(--note-font-size); }
-        .note-text { font-size: calc(var(--note-font-size) - 2px); color: var(--text-gray); margin-top: 4px; }
-        .tag-pill { font-size: 11px; background: rgba(0,0,0,0.05); padding: 2px 8px; border-radius: 10px; margin-top: 8px; display: inline-block; }
+        .note-text { font-size: calc(var(--note-font-size) - 2px); color: var(--text-gray); margin-top: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-        .fab { position: fixed; bottom: 25px; right: 20px; width: 56px; height: 56px; background-color: var(--google-blue); color: white; border-radius: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); cursor: pointer; font-size: 24px; z-index: 1001; transition: 0.2s; }
-        .fab:active { transform: scale(0.9); }
+        .fab { position: fixed; bottom: 25px; right: 20px; width: 56px; height: 56px; background-color: var(--google-blue); color: white; border-radius: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 1001; font-size: 24px; }
 
-        /* Full Editor */
+        /* Editor Overlay */
         .editor-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--surface); z-index: 4000; display: none; transform: translateY(100%); transition: transform 0.3s ease; }
         .editor-overlay.show { display: block; transform: translateY(0); }
         .editor-header { padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.05); }
-
-        .modal-content { background: var(--surface); color: var(--text-dark); border: none; border-radius: 15px; }
+        
         .hidden { display: none !important; }
     </style>
 </head>
@@ -70,7 +70,6 @@
         <div class="drawer-item active" onclick="switchView('all', this)">
             <i class="fa-regular fa-lightbulb"></i> Notes
         </div>
-        <div class="drawer-label ps-4 mb-2 mt-3 small text-uppercase text-secondary">Labels</div>
         <div class="drawer-item" onclick="switchView('Personal', this)">
             <i class="fa-solid fa-tag"></i> Personal
         </div>
@@ -81,17 +80,18 @@
         <div class="drawer-item" onclick="switchView('trash', this)">
             <i class="fa-regular fa-trash-can"></i> Trash
         </div>
-        <div class="drawer-item" onclick="handleSettingsClick()">
+        <div class="drawer-item" onclick="openSettings()">
             <i class="fa-solid fa-gear"></i> Settings
         </div>
     </div>
-
     <div class="menu-backdrop" id="menuBackdrop"></div>
 
-    <div class="app-bar">
+    <div class="app-bar" id="appBar">
         <i class="fa-solid fa-bars" id="menuBtn"></i>
         <h1 id="viewTitle">All Notes</h1>
-        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" class="hidden" placeholder="Search notes...">
+        <i class="fa-solid fa-magnifying-glass" id="searchBtn"></i>
+        <i class="fa-solid fa-xmark hidden" id="closeSearchBtn"></i>
     </div>
 
     <div id="notesList"></div>
@@ -100,17 +100,15 @@
 
     <div class="modal fade" id="settingsModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content p-2">
+            <div class="modal-content border-0 p-2">
                 <div class="modal-header border-0"><h5 class="modal-title">Settings</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
                 <div class="modal-body">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <span>Dark Mode</span>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="darkToggle" onchange="toggleDark()">
-                        </div>
+                        <div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="darkToggle" onchange="toggleDark()"></div>
                     </div>
                     <div class="mb-4">
-                        <label class="small text-secondary d-block mb-2">Text Size</label>
+                        <label class="small text-secondary mb-1 d-block">Text Size</label>
                         <select class="form-select" id="sizeSelect" onchange="updateSize()">
                             <option value="15px">Small</option>
                             <option value="18px" selected>Medium</option>
@@ -118,11 +116,11 @@
                         </select>
                     </div>
                     <div>
-                        <label class="small text-secondary d-block mb-2">Sort Notes By</label>
+                        <label class="small text-secondary mb-1 d-block">Sort By</label>
                         <select class="form-select" id="sortSelect" onchange="render()">
-                            <option value="new">Date (Newest)</option>
-                            <option value="old">Date (Oldest)</option>
-                            <option value="az">Title (A-Z)</option>
+                            <option value="new">Newest First</option>
+                            <option value="old">Oldest First</option>
+                            <option value="az">A-Z</option>
                         </select>
                     </div>
                 </div>
@@ -134,19 +132,17 @@
         <div class="editor-header">
             <i class="fa-solid fa-arrow-left fs-5" onclick="closeEditor()"></i>
             <div class="d-flex gap-3 align-items-center">
-                <select id="labelSelect" class="form-select form-select-sm border-0 bg-light" style="width: auto;">
+                <select id="labelSelect" class="form-select form-select-sm border-0 bg-light">
                     <option value="Personal">Personal</option>
                     <option value="Work">Work</option>
                 </select>
-                <button class="btn btn-primary btn-sm px-3 rounded-pill" onclick="saveNote()">Save</button>
+                <button class="btn btn-primary btn-sm px-3 rounded-pill" onclick="saveNote()">Done</button>
             </div>
         </div>
         <div class="p-4">
             <input type="text" id="editTitle" placeholder="Title" class="fw-bold fs-4 mb-3 border-0 bg-transparent w-100 outline-none">
-            <textarea id="editText" rows="15" placeholder="Start typing..." class="border-0 bg-transparent w-100 outline-none" style="resize:none;"></textarea>
-            
-            <div id="trashTools" class="hidden mt-4 pt-4 border-top">
-                <p class="text-center text-secondary small mb-3">Note is in Trash</p>
+            <textarea id="editText" rows="15" placeholder="Note content..." class="border-0 bg-transparent w-100 outline-none" style="resize:none;"></textarea>
+            <div id="trashTools" class="hidden mt-4 pt-4 border-top text-center">
                 <div class="d-flex gap-2">
                     <button class="btn btn-outline-success flex-grow-1" onclick="restoreNote()">Restore</button>
                     <button class="btn btn-outline-danger flex-grow-1" onclick="deleteForever()">Delete Forever</button>
@@ -157,36 +153,54 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        let notes = JSON.parse(localStorage.getItem('noteit_final') || "[]");
+        let notes = JSON.parse(localStorage.getItem('noteit_v10') || "[]");
         let currentView = 'all';
         let currentId = null;
 
         const drawer = document.getElementById('sideDrawer');
         const backdrop = document.getElementById('menuBackdrop');
+        const searchInput = document.getElementById('searchInput');
+        const viewTitle = document.getElementById('viewTitle');
+        const searchBtn = document.getElementById('searchBtn');
+        const closeSearchBtn = document.getElementById('closeSearchBtn');
         const settingsModal = new bootstrap.Modal(document.getElementById('settingsModal'));
 
-        // MENU CONTROLS
+        // --- NAVIGATION & MENU ---
         document.getElementById('menuBtn').onclick = () => { drawer.classList.add('open'); backdrop.classList.add('show'); };
         backdrop.onclick = () => { drawer.classList.remove('open'); backdrop.classList.remove('show'); };
-
-        function handleSettingsClick() {
-            // Step 1: Hide Menu & Backdrop immediately
-            drawer.classList.remove('open');
-            backdrop.classList.remove('show');
-            // Step 2: Launch Modal after a tiny delay for smoothness
-            setTimeout(() => settingsModal.show(), 150);
-        }
 
         function switchView(view, el) {
             currentView = view;
             document.querySelectorAll('.drawer-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
-            document.getElementById('viewTitle').innerText = view === 'all' ? 'All Notes' : (view === 'trash' ? 'Trash' : view);
-            backdrop.onclick(); // Close menu
+            viewTitle.innerText = view === 'all' ? 'All Notes' : (view === 'trash' ? 'Trash' : view);
+            backdrop.onclick();
             render();
         }
 
-        // SETTINGS FUNCTIONS
+        function openSettings() { backdrop.onclick(); setTimeout(() => settingsModal.show(), 200); }
+
+        // --- SEARCH LOGIC (FIXED) ---
+        searchBtn.onclick = () => {
+            viewTitle.classList.add('hidden');
+            searchBtn.classList.add('hidden');
+            searchInput.classList.remove('hidden');
+            closeSearchBtn.classList.remove('hidden');
+            searchInput.focus();
+        };
+
+        closeSearchBtn.onclick = () => {
+            searchInput.value = "";
+            searchInput.classList.add('hidden');
+            closeSearchBtn.classList.add('hidden');
+            viewTitle.classList.remove('hidden');
+            searchBtn.classList.remove('hidden');
+            render();
+        };
+
+        searchInput.oninput = () => render(searchInput.value.toLowerCase());
+
+        // --- SETTINGS ---
         function toggleDark() {
             document.body.classList.toggle('dark-mode');
             localStorage.setItem('ni_dark', document.body.classList.contains('dark-mode'));
@@ -198,11 +212,8 @@
             localStorage.setItem('ni_size', s);
         }
 
-        // NOTE CORE LOGIC
+        // --- CORE NOTE LOGIC ---
         document.getElementById('addBtn').onclick = () => {
-            if(currentView === 'trash') {
-                switchView('all', document.querySelector('.drawer-item'));
-            }
             currentId = null;
             document.getElementById('editTitle').value = '';
             document.getElementById('editText').value = '';
@@ -215,81 +226,81 @@
         function saveNote() {
             const t = document.getElementById('editTitle').value;
             const tx = document.getElementById('editText').value;
-            const lb = document.getElementById('labelSelect').value;
             if(!t && !tx) return closeEditor();
 
             if(currentId) {
                 const idx = notes.findIndex(n => n.id === currentId);
-                notes[idx] = { ...notes[idx], title: t, text: tx, label: lb };
+                notes[idx] = { ...notes[idx], title: t, text: tx, label: document.getElementById('labelSelect').value };
             } else {
-                notes.unshift({ id: Date.now(), title: t, text: tx, label: lb, trashed: false });
+                notes.unshift({ id: Date.now(), title: t, text: tx, label: document.getElementById('labelSelect').value, trashed: false });
             }
             sync(); closeEditor();
         }
 
-        // TRASH LOGIC
-        function restoreNote() {
-            notes.find(n => n.id === currentId).trashed = false;
-            sync(); closeEditor();
-        }
+        function restoreNote() { notes.find(n => n.id === currentId).trashed = false; sync(); closeEditor(); }
+        function deleteForever() { notes = notes.filter(n => n.id !== currentId); sync(); closeEditor(); }
+        function sync() { localStorage.setItem('noteit_v10', JSON.stringify(notes)); render(); }
 
-        function deleteForever() {
-            notes = notes.filter(n => n.id !== currentId);
-            sync(); closeEditor();
-        }
-
-        function sync() { localStorage.setItem('noteit_final', JSON.stringify(notes)); render(); }
-
-        function render() {
+        // --- RENDER & SWIPE RIGHT (FIXED) ---
+        function render(query = "") {
             const list = document.getElementById('notesList');
             list.innerHTML = "";
-            let data = notes.filter(n => currentView === 'trash' ? n.trashed : (currentView === 'all' ? !n.trashed : !n.trashed && n.label === currentView));
+            let data = notes.filter(n => {
+                const matchesView = currentView === 'trash' ? n.trashed : (currentView === 'all' ? !n.trashed : !n.trashed && n.label === currentView);
+                const matchesSearch = n.title.toLowerCase().includes(query) || n.text.toLowerCase().includes(query);
+                return matchesView && matchesSearch;
+            });
 
-            // Sorting
             const s = document.getElementById('sortSelect').value;
             data.sort((a,b) => s === 'new' ? b.id - a.id : (s === 'old' ? a.id - b.id : a.title.localeCompare(b.title)));
 
-            if(data.length === 0) {
-                list.innerHTML = `<div class="p-5 text-center text-secondary">No notes found in ${currentView}</div>`;
-                return;
-            }
-
             data.forEach(n => {
+                const wrapper = document.createElement('div');
+                wrapper.className = "note-wrapper";
+                
+                const delBtn = document.createElement('div');
+                delBtn.className = "delete-reveal";
+                delBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
+                delBtn.onclick = () => { n.trashed = true; sync(); };
+
                 const item = document.createElement('div');
                 item.className = "note-item";
+                item.innerHTML = `<div><div class="note-title">${n.title || 'Untitled'}</div><div class="note-text">${n.text || '...'}</div></div>`;
+                
+                // Swipe Logic
+                let startX = 0, currentX = 0;
+                item.addEventListener('touchstart', e => { startX = e.touches[0].clientX; item.style.transition = 'none'; });
+                item.addEventListener('touchmove', e => {
+                    let diff = e.touches[0].clientX - startX;
+                    if(diff > 0) { currentX = diff; item.style.transform = `translateX(${diff}px)`; }
+                });
+                item.addEventListener('touchend', () => {
+                    item.style.transition = 'transform 0.3s ease';
+                    if(currentX > window.innerWidth * 0.5) {
+                        item.style.transform = `translateX(${window.innerWidth}px)`;
+                        n.trashed = true; setTimeout(() => sync(), 200);
+                    } else if(currentX > 80) { item.style.transform = 'translateX(80px)'; }
+                    else { item.style.transform = 'translateX(0)'; currentX = 0; }
+                });
+
                 item.onclick = () => {
+                    if(currentX > 0) return;
                     currentId = n.id;
                     document.getElementById('editTitle').value = n.title;
                     document.getElementById('editText').value = n.text;
-                    document.getElementById('labelSelect').value = n.label;
                     n.trashed ? document.getElementById('trashTools').classList.remove('hidden') : document.getElementById('trashTools').classList.add('hidden');
                     document.getElementById('editor').classList.add('show');
                 };
 
-                // Swipe logic
-                let startX = 0;
-                item.ontouchstart = e => startX = e.touches[0].clientX;
-                item.ontouchend = e => {
-                    if (e.changedTouches[0].clientX - startX > 100 && !n.trashed) {
-                        n.trashed = true;
-                        item.style.transform = "translateX(100%)";
-                        item.style.opacity = "0";
-                        setTimeout(() => sync(), 200);
-                    }
-                };
-
-                item.innerHTML = `<div><div class="note-title">${n.title || 'Untitled'}</div><div class="note-text">${n.text || '...'}</div><div class="tag-pill">${n.label}</div></div>`;
-                list.appendChild(item);
+                wrapper.appendChild(delBtn);
+                wrapper.appendChild(item);
+                list.appendChild(wrapper);
             });
         }
 
         window.onload = () => {
-            if(localStorage.getItem('ni_dark') === 'true') {
-                document.body.classList.add('dark-mode');
-                document.getElementById('darkToggle').checked = true;
-            }
-            const sz = localStorage.getItem('ni_size');
-            if(sz) { document.getElementById('sizeSelect').value = sz; updateSize(); }
+            if(localStorage.getItem('ni_dark') === 'true') { document.body.classList.add('dark-mode'); document.getElementById('darkToggle').checked = true; }
+            const sz = localStorage.getItem('ni_size'); if(sz) { document.getElementById('sizeSelect').value = sz; updateSize(); }
             render();
         };
     </script>
