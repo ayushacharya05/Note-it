@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,11 +31,30 @@
 
         body { background-color: var(--bg-color); font-family: 'Roboto', sans-serif; color: var(--text-dark); transition: 0.2s; overflow-x: hidden; margin: 0; }
 
+        /* Splash Screen */
+        #splash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg-color); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; transition: opacity 0.6s ease, visibility 0.6s; }
+        #splash img { width: 100px; height: 100px; border-radius: 22px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        #splash h2 { font-weight: 500; color: var(--google-blue); font-size: 24px; }
+        #splash.fade-out { opacity: 0; visibility: hidden; }
+
+        /* Empty State Styling */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 70vh;
+            text-align: center;
+            color: var(--text-gray);
+            padding: 40px;
+        }
+        .empty-state i { font-size: 64px; margin-bottom: 20px; opacity: 0.2; }
+        .empty-state p { font-size: 18px; font-weight: 500; margin-bottom: 5px; }
+
         /* AppBar Refined */
         .app-bar { padding: 12px 20px; display: flex; align-items: center; background: var(--surface); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.1); height: 64px; }
         .app-bar h1 { font-size: 20px; margin: 0 0 0 25px; flex-grow: 1; font-weight: 400; white-space: nowrap; }
         .app-bar i { color: var(--text-gray); font-size: 20px; cursor: pointer; padding: 8px; }
-        
         #searchInput { flex-grow: 1; margin: 0 15px; border: none; outline: none; background: transparent; color: var(--text-dark); font-size: 18px; }
 
         /* Side Menu */
@@ -60,11 +80,15 @@
         .editor-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--surface); z-index: 4000; display: none; transform: translateY(100%); transition: transform 0.3s ease; }
         .editor-overlay.show { display: block; transform: translateY(0); }
         .editor-header { padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.05); }
-        
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
+
+    <div id="splash">
+        <img src="https://raw.githubusercontent.com/ayushacharya05/Note-it/refs/heads/main/images/icon.png" alt="Note It Logo">
+        <h2>Note It</h2>
+    </div>
 
     <div class="drawer" id="sideDrawer">
         <div class="drawer-item active" onclick="switchView('all', this)">
@@ -98,35 +122,7 @@
 
     <div class="fab" id="addBtn"><i class="fa-solid fa-plus"></i></div>
 
-    <div class="modal fade" id="settingsModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 p-2">
-                <div class="modal-header border-0"><h5 class="modal-title">Settings</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-                <div class="modal-body">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <span>Dark Mode</span>
-                        <div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="darkToggle" onchange="toggleDark()"></div>
-                    </div>
-                    <div class="mb-4">
-                        <label class="small text-secondary mb-1 d-block">Text Size</label>
-                        <select class="form-select" id="sizeSelect" onchange="updateSize()">
-                            <option value="15px">Small</option>
-                            <option value="18px" selected>Medium</option>
-                            <option value="22px">Large</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="small text-secondary mb-1 d-block">Sort By</label>
-                        <select class="form-select" id="sortSelect" onchange="render()">
-                            <option value="new">Newest First</option>
-                            <option value="old">Oldest First</option>
-                            <option value="az">A-Z</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div class="modal fade" id="settingsModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content border-0 p-2"><div class="modal-header border-0"><h5 class="modal-title">Settings</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="d-flex justify-content-between align-items-center mb-4"><span>Dark Mode</span><div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="darkToggle" onchange="toggleDark()"></div></div><div class="mb-4"><label class="small text-secondary mb-1 d-block">Text Size</label><select class="form-select" id="sizeSelect" onchange="updateSize()"><option value="15px">Small</option><option value="18px" selected>Medium</option><option value="22px">Large</option></select></div><div><label class="small text-secondary mb-1 d-block">Sort By</label><select class="form-select" id="sortSelect" onchange="render()"><option value="new">Newest First</option><option value="old">Oldest First</option><option value="az">A-Z</option></select></div></div></div></div></div>
 
     <div class="editor-overlay" id="editor">
         <div class="editor-header">
@@ -142,12 +138,7 @@
         <div class="p-4">
             <input type="text" id="editTitle" placeholder="Title" class="fw-bold fs-4 mb-3 border-0 bg-transparent w-100 outline-none">
             <textarea id="editText" rows="15" placeholder="Note content..." class="border-0 bg-transparent w-100 outline-none" style="resize:none;"></textarea>
-            <div id="trashTools" class="hidden mt-4 pt-4 border-top text-center">
-                <div class="d-flex gap-2">
-                    <button class="btn btn-outline-success flex-grow-1" onclick="restoreNote()">Restore</button>
-                    <button class="btn btn-outline-danger flex-grow-1" onclick="deleteForever()">Delete Forever</button>
-                </div>
-            </div>
+            <div id="trashTools" class="hidden mt-4 pt-4 border-top text-center"><div class="d-flex gap-2"><button class="btn btn-outline-success flex-grow-1" onclick="restoreNote()">Restore</button><button class="btn btn-outline-danger flex-grow-1" onclick="deleteForever()">Delete Forever</button></div></div>
         </div>
     </div>
 
@@ -165,7 +156,6 @@
         const closeSearchBtn = document.getElementById('closeSearchBtn');
         const settingsModal = new bootstrap.Modal(document.getElementById('settingsModal'));
 
-        // --- NAVIGATION & MENU ---
         document.getElementById('menuBtn').onclick = () => { drawer.classList.add('open'); backdrop.classList.add('show'); };
         backdrop.onclick = () => { drawer.classList.remove('open'); backdrop.classList.remove('show'); };
 
@@ -180,54 +170,19 @@
 
         function openSettings() { backdrop.onclick(); setTimeout(() => settingsModal.show(), 200); }
 
-        // --- SEARCH LOGIC (FIXED) ---
-        searchBtn.onclick = () => {
-            viewTitle.classList.add('hidden');
-            searchBtn.classList.add('hidden');
-            searchInput.classList.remove('hidden');
-            closeSearchBtn.classList.remove('hidden');
-            searchInput.focus();
-        };
-
-        closeSearchBtn.onclick = () => {
-            searchInput.value = "";
-            searchInput.classList.add('hidden');
-            closeSearchBtn.classList.add('hidden');
-            viewTitle.classList.remove('hidden');
-            searchBtn.classList.remove('hidden');
-            render();
-        };
-
+        searchBtn.onclick = () => { viewTitle.classList.add('hidden'); searchBtn.classList.add('hidden'); searchInput.classList.remove('hidden'); closeSearchBtn.classList.remove('hidden'); searchInput.focus(); };
+        closeSearchBtn.onclick = () => { searchInput.value = ""; searchInput.classList.add('hidden'); closeSearchBtn.classList.add('hidden'); viewTitle.classList.remove('hidden'); searchBtn.classList.remove('hidden'); render(); };
         searchInput.oninput = () => render(searchInput.value.toLowerCase());
 
-        // --- SETTINGS ---
-        function toggleDark() {
-            document.body.classList.toggle('dark-mode');
-            localStorage.setItem('ni_dark', document.body.classList.contains('dark-mode'));
-        }
+        function toggleDark() { document.body.classList.toggle('dark-mode'); localStorage.setItem('ni_dark', document.body.classList.contains('dark-mode')); }
+        function updateSize() { const s = document.getElementById('sizeSelect').value; document.documentElement.style.setProperty('--note-font-size', s); localStorage.setItem('ni_size', s); }
 
-        function updateSize() {
-            const s = document.getElementById('sizeSelect').value;
-            document.documentElement.style.setProperty('--note-font-size', s);
-            localStorage.setItem('ni_size', s);
-        }
-
-        // --- CORE NOTE LOGIC ---
-        document.getElementById('addBtn').onclick = () => {
-            currentId = null;
-            document.getElementById('editTitle').value = '';
-            document.getElementById('editText').value = '';
-            document.getElementById('trashTools').classList.add('hidden');
-            document.getElementById('editor').classList.add('show');
-        };
-
+        document.getElementById('addBtn').onclick = () => { currentId = null; document.getElementById('editTitle').value = ''; document.getElementById('editText').value = ''; document.getElementById('trashTools').classList.add('hidden'); document.getElementById('editor').classList.add('show'); };
         function closeEditor() { document.getElementById('editor').classList.remove('show'); }
 
         function saveNote() {
-            const t = document.getElementById('editTitle').value;
-            const tx = document.getElementById('editText').value;
+            const t = document.getElementById('editTitle').value, tx = document.getElementById('editText').value;
             if(!t && !tx) return closeEditor();
-
             if(currentId) {
                 const idx = notes.findIndex(n => n.id === currentId);
                 notes[idx] = { ...notes[idx], title: t, text: tx, label: document.getElementById('labelSelect').value };
@@ -241,7 +196,7 @@
         function deleteForever() { notes = notes.filter(n => n.id !== currentId); sync(); closeEditor(); }
         function sync() { localStorage.setItem('noteit_v10', JSON.stringify(notes)); render(); }
 
-        // --- RENDER & SWIPE RIGHT (FIXED) ---
+        // --- UPDATED RENDER WITH EMPTY STATE ---
         function render(query = "") {
             const list = document.getElementById('notesList');
             list.innerHTML = "";
@@ -251,13 +206,31 @@
                 return matchesView && matchesSearch;
             });
 
+            // Handle Empty State
+            if (data.length === 0) {
+                let emptyContent = "";
+                if (query) {
+                    emptyContent = `<div class="empty-state"><i class="fa-solid fa-magnifying-glass"></i><p>No matching notes</p><small>Try searching for something else</small></div>`;
+                } else if (currentView === 'trash') {
+                    emptyContent = `<div class="empty-state"><i class="fa-regular fa-trash-can"></i><p>Trash is empty</p></div>`;
+                } else {
+                    emptyContent = `
+                        <div class="empty-state">
+                            <i class="fa-regular fa-lightbulb"></i>
+                            <p>Safe & Secure Notes</p>
+                            <small>Your notes will appear here. Tap '+' to start.</small>
+                        </div>`;
+                }
+                list.innerHTML = emptyContent;
+                return;
+            }
+
             const s = document.getElementById('sortSelect').value;
             data.sort((a,b) => s === 'new' ? b.id - a.id : (s === 'old' ? a.id - b.id : a.title.localeCompare(b.title)));
 
             data.forEach(n => {
                 const wrapper = document.createElement('div');
                 wrapper.className = "note-wrapper";
-                
                 const delBtn = document.createElement('div');
                 delBtn.className = "delete-reveal";
                 delBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
@@ -267,7 +240,6 @@
                 item.className = "note-item";
                 item.innerHTML = `<div><div class="note-title">${n.title || 'Untitled'}</div><div class="note-text">${n.text || '...'}</div></div>`;
                 
-                // Swipe Logic
                 let startX = 0, currentX = 0;
                 item.addEventListener('touchstart', e => { startX = e.touches[0].clientX; item.style.transition = 'none'; });
                 item.addEventListener('touchmove', e => {
@@ -276,10 +248,8 @@
                 });
                 item.addEventListener('touchend', () => {
                     item.style.transition = 'transform 0.3s ease';
-                    if(currentX > window.innerWidth * 0.5) {
-                        item.style.transform = `translateX(${window.innerWidth}px)`;
-                        n.trashed = true; setTimeout(() => sync(), 200);
-                    } else if(currentX > 80) { item.style.transform = 'translateX(80px)'; }
+                    if(currentX > window.innerWidth * 0.5) { item.style.transform = `translateX(${window.innerWidth}px)`; n.trashed = true; setTimeout(() => sync(), 200); }
+                    else if(currentX > 80) { item.style.transform = 'translateX(80px)'; }
                     else { item.style.transform = 'translateX(0)'; currentX = 0; }
                 });
 
@@ -302,6 +272,7 @@
             if(localStorage.getItem('ni_dark') === 'true') { document.body.classList.add('dark-mode'); document.getElementById('darkToggle').checked = true; }
             const sz = localStorage.getItem('ni_size'); if(sz) { document.getElementById('sizeSelect').value = sz; updateSize(); }
             render();
+            setTimeout(() => { document.getElementById('splash').classList.add('fade-out'); }, 1800);
         };
     </script>
 </body>
